@@ -1,6 +1,6 @@
 package com.itechart.meetingcalendar.model.meeting.entity
 
-import com.itechart.meetingcalendar.model.base.BaseEntity
+import com.itechart.meetingcalendar.model.base.SafeDeleted
 import com.itechart.meetingcalendar.model.user.entity.User
 import groovy.transform.Canonical
 import groovy.transform.TupleConstructor
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @Canonical
 @TupleConstructor
-class Meeting implements BaseEntity {
+class Meeting implements SafeDeleted {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +24,10 @@ class Meeting implements BaseEntity {
     String name
     @NotNull
     Date date
-    Date cretedDate
+    Date createdDate
     @NotNull
     Long creatorId
     List<User> users
+    Boolean active
 
 }

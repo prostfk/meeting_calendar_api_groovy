@@ -1,32 +1,37 @@
 package com.itechart.meetingcalendar.model.base
 
-import org.springframework.data.repository.CrudRepository
-import org.springframework.stereotype.Service
+import com.itechart.meetingcalendar.exceptions.BadRequestException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.PagingAndSortingRepository
 
 import javax.transaction.Transactional
 
 abstract class BaseService<T extends BaseEntity> {
 
-    private CrudRepository<T, Long> crudRepository
+    private PagingAndSortingRepository<T, Long> repository
 
-    BaseService(CrudRepository<T, Long> crudRepository) {
-        this.crudRepository = crudRepository
+    BaseService(PagingAndSortingRepository<T, Long> repository) {
+        this.repository = repository
     }
 
     T save(T t) {
-        crudRepository.save(t)
+        repository.save t
     }
 
     List<T> save(List<T> t) {
         for (T t1 : t) {
-            save(t1)
+            save t1
         }
         t
     }
 
     T update(T t) {
-        if (t && t.id) {
-            return crudRepository.save(t)
+        if (t) {
+            if (!t.id) {
+                throw new BadRequestException("No id provided")
+            }
+            return repository.save(t)
         }
         null
     }
@@ -34,20 +39,30 @@ abstract class BaseService<T extends BaseEntity> {
     @Transactional
     List<T> update(List<T> ts) {
         List<T> upd = new ArrayList<>(ts.size())
-        ts.forEach({ t -> upd.add(update(t)) })
+        ts.forEach({ t -> upd.add update(t) })
         upd
     }
 
     void delete(T t) {
-        crudRepository.delete(t)
+        if (t instanceof SafeDeleted) {
+            def safe = (SafeDeleted) t
+            safe.active = false
+            update t
+        } else {
+            repository.delete t
+        }
     }
 
     T findById(Long id) {
-        crudRepository.findById(id).orElse(null)
+        repository.findById(id).orElse(null)
     }
 
     Iterable<T> findAll() {
-        crudRepository.findAll()
+        repository.findAll()
+    }
+
+    Page<T> findAll(Pageable pageable) {
+        repository.findAll pageable
     }
 
 }

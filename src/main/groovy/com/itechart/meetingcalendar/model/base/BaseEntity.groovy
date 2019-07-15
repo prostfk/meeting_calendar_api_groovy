@@ -1,6 +1,6 @@
 package com.itechart.meetingcalendar.model.base
 
-interface BaseEntity {
+trait BaseEntity {
 
     Long id
 

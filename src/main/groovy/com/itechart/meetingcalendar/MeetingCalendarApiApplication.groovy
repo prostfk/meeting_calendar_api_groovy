@@ -11,7 +11,7 @@ import static org.springframework.boot.SpringApplication.run
 class MeetingCalendarApiApplication {
 
     static void main(String...args) {
-        run(MeetingCalendarApiApplication, args)
+        run MeetingCalendarApiApplication, args
     }
 
 }

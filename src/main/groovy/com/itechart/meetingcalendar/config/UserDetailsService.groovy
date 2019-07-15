@@ -15,7 +15,7 @@ class UserDetailsService implements org.springframework.security.core.userdetail
 
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        def user = userService.findByUsername(username)
+        def user = userService.findByUsername username
         if (user) {
             def ud = new SecurityUser(user)
             ud
