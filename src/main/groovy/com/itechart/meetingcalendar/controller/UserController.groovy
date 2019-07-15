@@ -1,0 +1,41 @@
+package com.itechart.meetingcalendar.controller
+
+import com.itechart.meetingcalendar.model.user.entity.User
+import com.itechart.meetingcalendar.model.user.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
+
+import javax.validation.Valid
+
+import static org.springframework.http.HttpStatus.CREATED
+import static org.springframework.http.HttpStatus.NO_CONTENT
+
+@RestController("/api/users")
+class UserController {
+
+    @Autowired
+    private UserService userService
+
+    @GetMapping("/{id}")
+    User getById(@PathVariable Long id) {
+        userService.findById(id)
+    }
+
+    @PutMapping
+    void putUser(@Valid User user) {
+        userService.update(user)
+    }
+
+    @ResponseStatus(CREATED)
+    @PostMapping
+    void postUser(User user) {
+        userService.save(user)
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping("/{id}")
+    void deleteUser(@PathVariable Long id) {
+        userService.delete(new User(id))
+    }
+
+}
