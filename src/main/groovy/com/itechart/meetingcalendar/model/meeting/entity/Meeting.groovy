@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @Canonical
 @TupleConstructor
-class Meeting implements SafeDeleted {
+class Meeting extends SafeDeleted {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ class Meeting implements SafeDeleted {
     Date createdDate
     @NotNull
     Long creatorId
-    List<User> users
+//    List<User> users
     Boolean active
 
 }

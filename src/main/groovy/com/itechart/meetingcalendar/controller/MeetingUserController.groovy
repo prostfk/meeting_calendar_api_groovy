@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NO_CONTENT
 
-@RestController("/api/meetings")
+@RestController
+@RequestMapping("/api/meetings")
 class MeetingUserController {
 
     @Autowired
@@ -39,8 +40,8 @@ class MeetingUserController {
     }
 
     @ResponseStatus(NO_CONTENT)
-    @DeleteMapping("/{id}")
-    void deleteAssignment(@PathVariable Long id, @RequestBody Long userId) {
+    @DeleteMapping("/{id}/users/{userId}")
+    void deleteAssignment(@PathVariable Long id, @PathVariable Long userId) {
         def baseMeeting = meetingService.findById id
         if (!baseMeeting) {
             throw new BadRequestException("No such meeting")

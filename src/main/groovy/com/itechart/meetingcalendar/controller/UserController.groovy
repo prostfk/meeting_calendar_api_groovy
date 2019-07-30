@@ -13,7 +13,8 @@ import javax.validation.Valid
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.NO_CONTENT
 
-@RestController("/api/users")
+@RestController
+@RequestMapping("/api/users")
 class UserController {
 
     @Autowired

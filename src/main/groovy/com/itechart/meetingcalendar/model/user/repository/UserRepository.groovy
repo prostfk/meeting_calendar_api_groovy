@@ -16,4 +16,11 @@ interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @Query(value = "SELECT u.id, u.first_name, u.last_name FROM user u WHERE CONCAT(u.first_name, ' ', last_name) LIKE :fullName", nativeQuery = true)
     Page<IUserDto> findByFullName(@Param("fullName") String fullName, Pageable pageable)
+
+    User findByUsernameOrEmail(String username, String email)
+
+    User findUserByEmailAndActive(String email, boolean active)
+
+    User findByEmail(String email)
+
 }

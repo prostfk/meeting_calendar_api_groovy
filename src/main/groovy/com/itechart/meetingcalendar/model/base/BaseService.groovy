@@ -7,7 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository
 
 import javax.transaction.Transactional
 
-abstract class BaseService<T extends BaseEntity> {
+abstract class BaseService<T extends SafeDeleted> {
 
     private PagingAndSortingRepository<T, Long> repository
 

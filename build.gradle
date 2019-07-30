@@ -29,7 +29,13 @@ ext {
 }
 
 dependencies {
+    compile 'org.springframework.security:spring-security-jwt'
+    compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.10.RELEASE'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+    compile 'org.springframework.boot:spring-boot-starter-jdbc'
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.codehaus.groovy:groovy'
@@ -40,10 +46,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    compile 'org.springframework.security:spring-security-jwt'
-    compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.10.RELEASE'
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+    testImplementation 'org.springframework.security:spring-security-test'
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.6.RELEASE'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0'
 
 }
 
