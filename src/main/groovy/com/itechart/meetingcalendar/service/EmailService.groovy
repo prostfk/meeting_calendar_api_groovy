@@ -1,6 +1,6 @@
 package com.itechart.meetingcalendar.service
 
-
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
@@ -14,6 +14,8 @@ import static com.itechart.meetingcalendar.service.FileService.getTemplate
 
 @Service
 class EmailService {
+
+    private def logger = LoggerFactory.getLogger(EmailService.class)
 
     @Autowired
     private JavaMailSender sender
@@ -34,7 +36,7 @@ class EmailService {
             message.setContent(body, "text/html; charset=utf-8")
             sender.send(message)
         } catch (Exception e) {
-            //empty
+            logger.error "Cannot send email ", e
         }
     }
 

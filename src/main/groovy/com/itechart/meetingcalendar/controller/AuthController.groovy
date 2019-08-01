@@ -3,8 +3,12 @@ package com.itechart.meetingcalendar.controller
 import com.itechart.meetingcalendar.config.security.JwtGen
 import com.itechart.meetingcalendar.exceptions.BadRequestException
 import com.itechart.meetingcalendar.exceptions.CustomBodyResponseException
+import com.itechart.meetingcalendar.exceptions.CustomResponseException
+import com.itechart.meetingcalendar.exceptions.NotFoundException
 import com.itechart.meetingcalendar.model.registrationtoken.entity.Token
+import com.itechart.meetingcalendar.model.registrationtoken.entity.TokenType
 import com.itechart.meetingcalendar.model.registrationtoken.service.TokenService
+import com.itechart.meetingcalendar.model.user.dto.RegisterUserDto
 import com.itechart.meetingcalendar.model.user.dto.UserAuthDto
 import com.itechart.meetingcalendar.model.user.entity.User
 import com.itechart.meetingcalendar.model.user.service.UserService
@@ -13,7 +17,9 @@ import com.itechart.meetingcalendar.service.EmailTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpServerErrorException
 
 import javax.validation.Valid
 import javax.validation.constraints.Email
@@ -46,8 +52,8 @@ class AuthController {
     private String appUrl
 
     @PostMapping("/auth")
-    def postAuth(@NotNull UserAuthDto user) {
-        def baseUser = userService.findByUsernameOrEmail user.username
+    def postAuth(@RequestBody UserAuthDto user) {
+        def baseUser = userService.findByEmail user.email
         if (!baseUser) {
             throw new BadRequestException("No such user")
         }
@@ -67,9 +73,40 @@ class AuthController {
         userService.findById baseToken.userId
     }
 
+    @Transactional
+    @PutMapping("/registration")
+    Map<String, String> putRegistration(@RequestBody Map<String, String> map) {
+        def token = map.get('token')
+        if (!token) {
+            throw new BadRequestException("Provide token")
+        }
+        def baseToken = tokenService.findByValue token
+        if (!baseToken) {
+            throw new NotFoundException("No such token")
+        }
+        if (!baseToken.active) {
+            throw new BadRequestException("Token is expired")
+        }
+        if (baseToken.type == VALIDATE_EMAIL) {
+            def user = userService.findById baseToken.userId
+            if (!user) {
+                throw new BadRequestException("No such user")
+            }
+            baseToken.active = false
+            tokenService.update baseToken
+            user.active = true
+            userService.update user
+            return ["email": user.email]
+        } else {
+            throw new CustomResponseException("Not implemented", 501)
+        }
+    }
+
     @ResponseStatus(CREATED)
     @PostMapping("/registration")
-    void postRegistration(@Valid User user, String token) {
+    void postRegistration(@Valid @RequestBody RegisterUserDto dto) {
+        def user = dto.user
+        def token = dto.token
         if (token) {
             def baseToken = tokenService.findByValueAndType token, REGISTRATION
             if (baseToken && baseToken.active) {

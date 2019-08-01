@@ -5,6 +5,7 @@ import com.itechart.meetingcalendar.exceptions.CustomBodyResponseException
 import com.itechart.meetingcalendar.model.base.BaseService
 import com.itechart.meetingcalendar.model.user.dto.IUserDto
 import com.itechart.meetingcalendar.model.user.dto.UserDto
+import com.itechart.meetingcalendar.model.user.dto.UserProfileDto
 import com.itechart.meetingcalendar.model.user.entity.User
 import com.itechart.meetingcalendar.model.user.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,13 +40,14 @@ class UserService extends BaseService<User> {
     }
 
     User registerUser(User user) {
-        def byUsername = findByUsernameOrEmail user.username
+        def byEmail = findByEmail user.email
+        if (byEmail) {
+            throw new CustomBodyResponseException("email", "User with this email already exists", 400)
+        }
+
+        def byUsername = findByUsername user.username
         if (byUsername) {
-            if (byUsername.username == user.username) {
-                throw new CustomBodyResponseException("username", "User with this username already exists", 400)
-            } else if (byUsername.email == user.email) {
-                throw new CustomBodyResponseException("email", "User with this email already exists", 400)
-            }
+            throw new CustomBodyResponseException("username", "User with this username already exists", 400)
         }
         if (user.password.length() < 6 || user.password.length() > 20) {
             throw new CustomBodyResponseException("password", "Password must be between 6 and 20 chars", 400)
@@ -58,4 +60,9 @@ class UserService extends BaseService<User> {
     User findByEmail(String email) {
         repository.findByEmail email
     }
+
+    UserProfileDto findUserProfileInfo(String username) {
+        repository.findUserProfileInfoUsername(username)
+    }
+
 }

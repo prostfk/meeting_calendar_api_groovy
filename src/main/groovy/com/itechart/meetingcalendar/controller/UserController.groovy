@@ -1,11 +1,14 @@
 package com.itechart.meetingcalendar.controller
 
 import com.itechart.meetingcalendar.model.user.dto.IUserDto
+import com.itechart.meetingcalendar.model.user.dto.UserDto
+import com.itechart.meetingcalendar.model.user.dto.UserProfileDto
 import com.itechart.meetingcalendar.model.user.entity.User
 import com.itechart.meetingcalendar.model.user.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
@@ -40,6 +43,23 @@ class UserController {
     @DeleteMapping("/{id}")
     void deleteUser(@PathVariable Long id) {
         userService.delete new User(id)
+    }
+
+    @GetMapping("/profile")
+    UserProfileDto getProfile() {
+        def name = SecurityContextHolder.context.authentication.name
+        userService.findUserProfileInfo(name)
+    }
+
+    @PutMapping("/profile")
+    void putProfile(@RequestBody UserProfileDto dto) {
+        def name = SecurityContextHolder.context.authentication.name
+        def current = userService.findByUsername name
+        current.firstName = dto.firstName
+        current.lastName = dto.lastName
+        current.department = dto.department
+        current.room = dto.room
+        userService.update current
     }
 
     @GetMapping
