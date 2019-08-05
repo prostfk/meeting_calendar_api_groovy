@@ -26,6 +26,7 @@ class User extends SafeDeleted {
     @NotBlank
     String lastName
     String patronymic
+    String gender
     @NotBlank
     String email
     @NotBlank
@@ -35,5 +36,6 @@ class User extends SafeDeleted {
     String department
     Integer room
     Boolean active
+    String avatar
 
 }

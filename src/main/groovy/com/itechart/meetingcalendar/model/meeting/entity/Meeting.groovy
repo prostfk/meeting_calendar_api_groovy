@@ -9,8 +9,13 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Temporal
+import javax.persistence.TemporalType
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
+
+import static javax.persistence.TemporalType.TIME
 
 @Entity
 @Canonical
@@ -20,14 +25,20 @@ class Meeting extends SafeDeleted {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
-    @NotBlank
-    String name
+    @Size(min=3, max = 20)
+    String title
     @NotNull
     Date date
-    Date createdDate
     @NotNull
+//    @Temporal(TIME)
+    String startTime
+    @NotNull
+//    @Temporal(TIME)
+    String endTime
+    @NotNull
+    Integer room
+    Date createdDate
     Long creatorId
-//    List<User> users
     Boolean active
 
 }

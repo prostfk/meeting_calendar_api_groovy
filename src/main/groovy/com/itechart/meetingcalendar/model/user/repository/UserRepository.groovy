@@ -24,6 +24,6 @@ interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     User findByEmail(String email)
 
-    @Query(value = "SELECT first_name as firstName, last_name as lastName, gender, patronymic, room, username, email, department FROM users WHERE username=:username", nativeQuery=true)
+    @Query(value = "SELECT first_name as firstName, last_name as lastName, gender, patronymic, room, username, email, department, avatar FROM users WHERE username=:username", nativeQuery=true)
     UserProfileDto findUserProfileInfoUsername(@Param("username") String username)
 }

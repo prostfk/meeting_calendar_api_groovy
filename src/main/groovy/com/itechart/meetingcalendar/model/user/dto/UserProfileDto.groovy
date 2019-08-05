@@ -12,6 +12,7 @@ trait UserProfileDto {
     String patronymic
     String gender
     String department
+    String avatar
     Integer room
 
 }

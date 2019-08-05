@@ -5,6 +5,38 @@ import org.springframework.core.io.Resource
 
 class FileService {
 
+    static boolean saveBase64(String base64, String path) {
+        OutputStream os = null
+        try {
+            os = new FileOutputStream(path)
+            byte[] decode = Base64.decoder.decode base64
+            os.write decode
+            true
+        } catch (IOException e) {
+            e.printStackTrace()
+            false
+        } finally {
+            if (os) {
+                try {
+                    os.close()
+                } catch (Exception e) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    static void createFileIfNeed(String path, boolean folder) {
+        def file = new File(path)
+        if (!file.exists()) {
+            if (folder) {
+                file.mkdirs()
+            } else {
+                file.createNewFile()
+            }
+        }
+    }
+
     static String getTemplate(EmailTemplate template) {
         try {
             getTemplateUnsafe(template)

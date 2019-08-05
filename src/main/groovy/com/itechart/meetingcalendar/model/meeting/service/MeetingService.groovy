@@ -1,5 +1,6 @@
 package com.itechart.meetingcalendar.model.meeting.service
 
+import com.itechart.meetingcalendar.exceptions.BadRequestException
 import com.itechart.meetingcalendar.model.base.BaseService
 import com.itechart.meetingcalendar.model.meeting.entity.Meeting
 import com.itechart.meetingcalendar.model.meeting.repository.MeetingRepository
@@ -28,4 +29,20 @@ class MeetingService extends BaseService<Meeting> {
         repository.findAllowedMeetings userId, pageable
     }
 
+    Page<Meeting> findByRoomAndStartTimeAndEndTime(Date date, Integer room, String startTime, String endTime, Pageable pageable) {
+        if (!room) {
+            throw new BadRequestException("Room is required")
+        } else if (!startTime) {
+            throw new BadRequestException("Start time is required")
+        } else if (!endTime) {
+            throw new BadRequestException("End time is required")
+        } else if (!pageable) {
+            throw new BadRequestException("Page details are required")
+        }
+        repository.findByRoomAndStartTimeAndEndTime date, room, "${startTime}:20.08321", "${endTime}:20.08321", pageable
+    }
+
+    List<Meeting> findBetweenDates(Date dateStart, Date dateEnd, Long userId) {
+        repository.findBetweenDates dateStart, dateEnd, userId
+    }
 }
