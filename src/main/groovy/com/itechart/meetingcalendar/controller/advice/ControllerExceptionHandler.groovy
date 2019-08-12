@@ -17,7 +17,7 @@ class ControllerExceptionHandler {
 
     @ExceptionHandler
     ResponseEntity customBodyResponse(CustomBodyResponseException e) {
-        new ResponseEntity("{\"${e.key}\": \"${e.message}\"", HttpStatus.valueOf(e.code))
+        new ResponseEntity("{\"${e.key}\": \"${e.message}\"}", HttpStatus.valueOf(e.code))
     }
 
 }

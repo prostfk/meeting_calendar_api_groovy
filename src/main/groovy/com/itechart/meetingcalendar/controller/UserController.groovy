@@ -2,13 +2,13 @@ package com.itechart.meetingcalendar.controller
 
 import com.itechart.meetingcalendar.exceptions.BadRequestException
 import com.itechart.meetingcalendar.exceptions.CustomResponseException
+import com.itechart.meetingcalendar.model.user.dto.FindUserDto
 import com.itechart.meetingcalendar.model.user.dto.IUserDto
 import com.itechart.meetingcalendar.model.user.dto.UserDto
 import com.itechart.meetingcalendar.model.user.dto.UserProfileDto
 import com.itechart.meetingcalendar.model.user.dto.UserProfileUpdateDto
 import com.itechart.meetingcalendar.model.user.entity.User
 import com.itechart.meetingcalendar.model.user.service.UserService
-import com.itechart.meetingcalendar.service.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
@@ -33,6 +33,11 @@ class UserController {
 
     @Value('${attachments.path}')
     private String resourcePath
+
+    @GetMapping
+    Page<UserDto> getUsers(FindUserDto params, @Valid @NotNull Pageable pageable) {
+        userService.findUsers(params, pageable)
+    }
 
     @GetMapping("/{id}")
     User getById(@PathVariable Long id) {
@@ -75,10 +80,6 @@ class UserController {
         userService.update current
     }
 
-    @GetMapping
-    Page<IUserDto> getUsers(@RequestParam String fullName, @RequestParam Pageable pageable) {
-        userService.findByFullName "%${fullName}%".toString(), pageable
-    }
 
     @PutMapping("/avatars")
     void updateAvatar(@NotNull String base64) {

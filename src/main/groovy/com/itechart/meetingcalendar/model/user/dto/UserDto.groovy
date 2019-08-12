@@ -5,10 +5,14 @@ import groovy.transform.TupleConstructor
 
 @Canonical
 @TupleConstructor
-class UserDto implements IUserDto{
+class UserDto {
 
     Long id
     String firstName
     String lastName
+    String department
+    String email
+    String avatar
+    Integer room
 
 }
