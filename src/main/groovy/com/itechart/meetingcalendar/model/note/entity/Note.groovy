@@ -1,25 +1,26 @@
-package com.itechart.meetingcalendar.model.department.entity
+package com.itechart.meetingcalendar.model.note.entity
 
-import com.itechart.meetingcalendar.model.base.BaseEntity
 import com.itechart.meetingcalendar.model.base.SafeDeleted
 import groovy.transform.Canonical
-import groovy.transform.TupleConstructor
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.validation.constraints.Size
 
-@Canonical
-@TupleConstructor
 @Entity
-class Department extends SafeDeleted {
+@Canonical
+class Note extends SafeDeleted {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
-    String name
+    @Size(min = 1, max = 30)
+    String title
+    @Size(min = 1, max = 5000)
+    String note
+    Long userId
     Boolean active
-
 
 }
